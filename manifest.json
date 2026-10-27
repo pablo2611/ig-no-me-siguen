@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "IG - Quién no me sigue",
+  "version": "2.9.4",
+  "description": "Analiza tu cuenta local con modo seguro: datos minimos, pausas largas, limites bajos y bloqueo automatico ante senales de riesgo.",
+  "permissions": [
+    "cookies",
+    "storage",
+    "downloads",
+    "notifications",
+    "tabs",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://*.fbcdn.net/*",
+    "https://www.instagram.com/*",
+    "https://*.xx.fbcdn.net/*",
+    "https://*.cdninstagram.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "IG - Quién no me sigue"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data: https:; connect-src https://www.instagram.com https://*.cdninstagram.com https://*.fbcdn.net https://*.xx.fbcdn.net;"
+  },
+  "incognito": "split"
+}

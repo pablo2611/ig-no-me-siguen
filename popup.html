@@ -1,0 +1,455 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>IG - Quien no me sigue</title>
+<style>
+  :root{
+    --bg:#0b1117;
+    --panel:#101822;
+    --panel2:#152030;
+    --border:#263447;
+    --text:#eef5ff;
+    --muted:#91a4b8;
+    --soft:#c7d4e2;
+    --accent:#38bdf8;
+    --accent2:#2563eb;
+    --danger:#ef4444;
+    --ok:#22c55e;
+    --warn:#f59e0b;
+  }
+  *{box-sizing:border-box;}
+  html{
+    margin:0;
+    padding:0;
+    width:390px;
+    min-height:600px;
+    background:var(--bg);
+    overflow:hidden;
+  }
+  body{
+    width:390px;
+    min-width:390px;
+    height:600px;
+    margin:0;
+    color:var(--text);
+    background:radial-gradient(circle at 20% 0%,rgba(56,189,248,.12),transparent 34%),var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  body[data-theme="light"]{
+    --bg:#f4f8fc;
+    --panel:#ffffff;
+    --panel2:#edf4fb;
+    --border:#c9d8e8;
+    --text:#102033;
+    --muted:#5d7188;
+    --soft:#2d4056;
+    background:radial-gradient(circle at 20% 0%,rgba(14,165,233,.14),transparent 34%),var(--bg);
+  }
+  body[data-theme="light"] .top{background:rgba(255,255,255,.92);border-bottom-color:rgba(16,32,51,.08);}
+  body[data-theme="light"] .card,
+  body[data-theme="light"] .list,
+  body[data-theme="light"] .modal-card,
+  body[data-theme="light"] .welcome-card{background:linear-gradient(180deg,#ffffff,#edf4fb);}
+  body[data-theme="light"] .secondary{background:linear-gradient(180deg,#ffffff,#e8f1fa);}
+  body[data-theme="light"] .field input,
+  body[data-theme="light"] .field textarea{background:#ffffff;color:var(--text);}
+  body[data-theme="light"] button{color:#102033;border-color:#9eb3c9;}
+  body[data-theme="light"] button:disabled{background:#e7eef6;color:#4f647a;border-color:#b9c9da;}
+  body[data-theme="light"] .primary{background:linear-gradient(135deg,#22d3ee,#2563eb);color:#ffffff;border-color:#1d4ed8;}
+  body[data-theme="light"] .danger{background:#fff1f2;color:#991b1b;border-color:#f0a3aa;}
+  body[data-theme="light"] .ok{background:#e9f9ef;color:#166534;border-color:#8fd6a7;}
+  body[data-theme="light"] .pro{background:#102033;color:#ffffff;border-color:#102033;}
+  body[data-theme="light"] .primary:disabled,
+  body[data-theme="light"] .secondary:disabled,
+  body[data-theme="light"] .danger:disabled,
+  body[data-theme="light"] .ok:disabled,
+  body[data-theme="light"] .pro:disabled{background:#e7eef6;color:#4f647a;border-color:#b9c9da;}
+  @media (max-width:390px){
+    html,body{width:100vw;min-width:320px;height:600px;}
+    .top{padding:11px 12px 10px;flex-wrap:wrap;align-items:flex-start;}
+    .brand{flex:1 1 170px;}
+    .top-actions{flex:1 1 100%;justify-content:flex-start;padding-left:41px;margin-top:-2px;}
+    .subtitle{max-width:220px;}
+    .body{padding:10px;}
+    .row{gap:6px;}
+    button{padding:9px 8px;font-size:11.5px;}
+    .stats{gap:6px;}
+    .num{font-size:14px;}
+  }
+  .top{
+    flex:0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 14px 10px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    background:rgba(16,24,34,.9);
+  }
+  .brand{display:flex;align-items:center;gap:9px;min-width:0;flex:1 1 auto;}
+  .mark{
+    width:32px;height:32px;border-radius:11px;
+    display:grid;place-items:center;
+    background:linear-gradient(145deg,#0ea5e9,#1d4ed8);
+    box-shadow:0 10px 24px rgba(14,165,233,.18);
+    font-weight:900;
+    color:#ffffff;
+    position:relative;
+    flex:0 0 auto;
+  }
+  .mark svg{width:18px;height:18px;display:block;stroke:currentColor;stroke-width:2.8;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .title{min-width:0;}
+  h1{font-size:13.5px;margin:0;font-weight:900;letter-spacing:.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .subtitle{font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:145px;}
+  .safe-pill{
+    border:1px solid rgba(34,197,94,.42);
+    background:rgba(34,197,94,.14);
+    color:#bbf7d0;
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:10px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+  body[data-theme="light"] .safe-pill{background:#dcfce7;border-color:#86efac;color:#166534;}
+  .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;flex:0 0 auto;min-width:0;}
+  .chip-btn{flex:0 0 auto;border-radius:999px;padding:5px 7px;font-size:10px;font-weight:900;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);box-shadow:none;min-width:34px;}
+  .chip-btn.active{border-color:rgba(56,189,248,.8);background:rgba(56,189,248,.16);color:#e0f2fe;}
+  body[data-theme="light"] .chip-btn{background:#f8fbff;color:#1f3348;border-color:#b9c9da;}
+  body[data-theme="light"] .chip-btn.active{color:#075985;background:#dff3ff;border-color:#7dd3fc;}
+  .body{
+    padding:12px 14px 14px;
+    flex:1 1 auto;
+    min-height:0;
+    max-height:none;
+    overflow-y:auto;
+  }
+  .body::-webkit-scrollbar{width:10px;height:10px;}
+  .body::-webkit-scrollbar-track{background:#08111a;border-radius:999px;}
+  .body::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#38bdf8,#2563eb);border-radius:999px;border:2px solid #08111a;}
+  .body::-webkit-scrollbar-thumb:hover{background:#7dd3fc;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+  .step{
+    border:1px solid var(--border);
+    background:rgba(16,24,34,.74);
+    color:var(--muted);
+    border-radius:999px;
+    padding:6px 6px;
+    text-align:center;
+    font-size:10.5px;
+    font-weight:800;
+    transition:background .2s,border .2s,color .2s,transform .2s;
+  }
+  .step.active{color:#e0f2fe;border-color:rgba(56,189,248,.78);background:rgba(56,189,248,.14);transform:translateY(-1px);}
+  body[data-theme="light"] .step{background:#f7fbff;color:#52677d;border-color:#b9c9da;}
+  body[data-theme="light"] .step.active{background:#dff3ff;color:#075985;border-color:#38bdf8;}
+  .card{
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,rgba(21,32,48,.96),rgba(16,24,34,.96));
+    border-radius:16px;
+    padding:12px;
+    margin-bottom:10px;
+    box-shadow:0 10px 26px rgba(0,0,0,.16);
+  }
+  .account{display:none;animation:fadeUp .22s ease both;}
+  .account-main{display:flex;align-items:center;gap:10px;}
+  .avatar{
+    width:48px;height:48px;border-radius:50%;
+    background:linear-gradient(145deg,#164e63,#0ea5e9);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:950;color:#e0f2fe;overflow:hidden;flex:0 0 auto;
+  }
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+  .avatar.missing{border:1px solid rgba(239,68,68,.55);box-shadow:0 0 0 3px rgba(239,68,68,.08);}
+  .user{min-width:0;flex:1;}
+  .user-title{font-size:14px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .user-sub{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .confirm{display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);}
+  .confirm-title{font-size:12px;font-weight:850;margin-bottom:8px;color:var(--soft);}
+  .row{display:flex;gap:8px;margin-bottom:9px;}
+  .row:last-child{margin-bottom:0;}
+  button{
+    flex:1;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 10px;
+    font-size:12.5px;font-weight:850;cursor:pointer;
+    letter-spacing:.1px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 18px rgba(0,0,0,.14);
+    transition:transform .12s,filter .18s,opacity .18s,background .18s,border-color .18s,box-shadow .18s;
+  }
+  button:hover:not(:disabled){filter:brightness(1.06);border-color:rgba(125,211,252,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 22px rgba(0,0,0,.18);}
+  button:active:not(:disabled){transform:translateY(1px) scale(.99);}
+  button:disabled{opacity:1;cursor:not-allowed;background:linear-gradient(180deg,#111b27,#0d1520);color:#6f7f90;border-color:#1f2d3d;box-shadow:none;}
+  .primary{background:linear-gradient(135deg,#22d3ee,#2563eb);color:white;}
+  .secondary{background:linear-gradient(180deg,#1b293a,#121b28);color:var(--text);border-color:var(--border);}
+  .danger{background:rgba(239,68,68,.08);color:#fecaca;border:1px solid rgba(239,68,68,.32);}
+  .ok{background:rgba(34,197,94,.14);color:#bbf7d0;border:1px solid rgba(34,197,94,.36);}
+  .pro{background:linear-gradient(135deg,#22c55e,#0ea5e9);color:#f8feff;}
+  .pro:disabled{background:linear-gradient(180deg,#111b27,#0d1520);color:#6f7f90;border-color:#1f2d3d;}
+  .statusline{display:flex;align-items:flex-start;gap:8px;min-height:24px;margin:2px 0 9px;}
+  .status-icon{width:14px;height:14px;border-radius:50%;border:2px solid rgba(145,164,184,.35);flex:0 0 auto;margin-top:2px;}
+  .status-icon.spin{border-color:rgba(56,189,248,.18);border-top-color:var(--accent);animation:spin .72s linear infinite;}
+  .status-icon.ok{border-color:var(--ok);background:rgba(34,197,94,.18);}
+  .status-icon.error{border-color:var(--danger);background:rgba(239,68,68,.14);}
+  .status-icon.warn{border-color:var(--warn);background:rgba(245,158,11,.13);}
+  .status{color:var(--muted);font-size:12px;line-height:1.35;min-width:0;}
+  .status.warn{color:#fbbf24;}
+  .status.error{color:#fca5a5;}
+  .status.ok{color:#86efac;}
+  .safety-panel{display:none;border:1px solid rgba(34,197,94,.25);background:rgba(34,197,94,.08);color:#bbf7d0;border-radius:13px;padding:9px;margin:0 0 10px;font-size:11px;line-height:1.4;}
+  .safety-panel.risk{border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.1);color:#fde68a;}
+  .safety-panel.locked{border-color:rgba(239,68,68,.38);background:rgba(239,68,68,.1);color:#fecaca;}
+  .safety-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:950;margin-bottom:4px;}
+  .safety-panel button{width:auto;padding:5px 8px;border-radius:999px;font-size:10px;box-shadow:none;}
+  .bar-wrap{display:none;height:8px;background:#08111a;border-radius:999px;overflow:hidden;margin-bottom:9px;border:1px solid rgba(255,255,255,.04);}
+  .bar{height:100%;width:0%;background:linear-gradient(90deg,#38bdf8,#2563eb);transition:width .28s ease;position:relative;overflow:hidden;}
+  .bar::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.32),transparent);transform:translateX(-120%);animation:shimmer 1.2s infinite;}
+  .stats{display:none;gap:8px;margin-bottom:10px;}
+  .stat{flex:1;border:1px solid var(--border);background:rgba(16,24,34,.82);border-radius:14px;padding:9px 6px;text-align:center;}
+  .num{font-size:16px;font-weight:950;letter-spacing:.1px;}
+  .label{font-size:10px;color:var(--muted);margin-top:3px;}
+  .list{
+    max-height:none;
+    overflow:visible;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:rgba(16,24,34,.76);
+  }
+  .empty{padding:18px 14px;text-align:center;color:var(--muted);font-size:12px;line-height:1.45;}
+  .section-title{padding:10px 10px 7px;color:#c7d4e2;font-size:12px;font-weight:900;text-align:left;border-bottom:1px solid rgba(255,255,255,.06);}
+  .note{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:11.5px;line-height:1.4;color:#9cc9ff;background:rgba(37,99,235,.08);}
+  .list-item{display:flex;align-items:flex-start;gap:9px;padding:10px;border-bottom:1px solid rgba(255,255,255,.06);animation:fadeUp .18s ease both;}
+  .list-item:last-child{border-bottom:0;}
+  .mini-avatar{width:34px;height:34px;border-radius:50%;background:#1c2938;display:flex;align-items:center;justify-content:center;font-size:10px;color:#7dd3fc;flex:0 0 auto;margin-top:2px;overflow:hidden;}
+  .mini-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+  .item-main{min-width:0;flex:1;}
+  .user-link{color:var(--text);text-decoration:none;font-size:13px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+  .user-link:hover{color:#7dd3fc;}
+  .url-line{display:block;color:#93c5fd;text-decoration:none;font-size:11.3px;font-weight:750;line-height:1.25;margin-top:2px;white-space:normal;overflow-wrap:anywhere;word-break:break-word;}
+  .url-line:hover{color:#bfdbfe;text-decoration:underline;}
+  .item-sub{font-size:10.7px;color:var(--muted);white-space:normal;overflow-wrap:anywhere;margin-top:2px;}
+  .item-actions{display:flex;align-items:center;gap:6px;margin-top:6px;}
+  .badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:4px 7px;font-size:10px;font-weight:850;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--muted);}
+  .badge.done{border-color:rgba(34,197,94,.32);background:rgba(34,197,94,.1);color:#bbf7d0;}
+  .badge.pending{border-color:rgba(56,189,248,.34);background:rgba(56,189,248,.1);color:#bae6fd;}
+  .badge.error{border-color:rgba(239,68,68,.32);background:rgba(239,68,68,.09);color:#fecaca;}
+  .mini-action{flex:0 0 auto;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900;box-shadow:none;background:rgba(56,189,248,.12);color:#bae6fd;border:1px solid rgba(56,189,248,.35);}
+  .mini-action.danger{background:rgba(34,197,94,.16);color:#bbf7d0;border-color:rgba(34,197,94,.38);}
+  .mini-action:disabled{opacity:.55;cursor:not-allowed;}
+  body[data-theme="light"] .mini-action{background:#e0f2fe;color:#075985;border-color:#7dd3fc;}
+  body[data-theme="light"] .mini-action.danger{background:#dcfce7;color:#166534;border-color:#86efac;}
+  .skeleton{padding:12px;}
+  .sk-row{height:12px;border-radius:999px;background:linear-gradient(90deg,#152030,#203044,#152030);background-size:220% 100%;animation:load 1.15s ease-in-out infinite;margin:10px 0;}
+  .sk-row:nth-child(2){width:78%;}.sk-row:nth-child(3){width:62%;}.sk-row:nth-child(4){width:88%;}
+
+  .footer{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;margin-top:10px;color:var(--muted);font-size:10.5px;}
+  .footer a{justify-self:start;display:inline-flex;align-items:center;max-width:100%;color:#bae6fd;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(56,189,248,.28);background:rgba(56,189,248,.08);border-radius:999px;padding:5px 9px;font-weight:850;}
+  body[data-theme="light"] .footer a{color:#075985;background:#e0f2fe;border-color:#7dd3fc;}
+  .version{color:#7dd3fc;font-weight:850;white-space:nowrap;}
+  .tiny-btn{flex:0 0 auto;padding:7px 9px;border-radius:10px;font-size:10.5px;}
+  .modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:12px;}
+  .modal.open{display:flex;}
+  .modal-backdrop{position:absolute;inset:0;background:rgba(3,7,12,.72);backdrop-filter:blur(6px);}
+  .modal-card{position:relative;width:min(390px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#101822,#0b1117);box-shadow:0 24px 80px rgba(0,0,0,.45);padding:14px;}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+  .modal-title{font-size:14px;font-weight:950;}
+  .icon-btn{flex:0 0 auto;width:30px;height:30px;padding:0;border-radius:10px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--border);}
+  .field{display:block;margin:9px 0;color:var(--soft);font-size:11px;font-weight:850;}
+  .field input,.field textarea{width:100%;margin-top:5px;border:1px solid var(--border);border-radius:12px;background:#0b1117;color:var(--text);padding:10px;font:inherit;font-size:12px;outline:none;}
+  .field input[type="checkbox"]{width:auto;margin:0 6px 0 0;vertical-align:middle;}
+  .field textarea{min-height:86px;resize:vertical;line-height:1.35;}
+  .field input:focus,.field textarea:focus{border-color:rgba(56,189,248,.75);box-shadow:0 0 0 3px rgba(56,189,248,.08);}
+  .risk-box{border:1px solid rgba(245,158,11,.32);background:rgba(245,158,11,.09);color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.4;margin:8px 0;}
+  .modal-actions{display:flex;gap:8px;margin-top:10px;}
+  .modal-small{color:var(--muted);font-size:10.5px;line-height:1.35;margin-top:8px;}
+  .welcome{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 20%,rgba(56,189,248,.22),transparent 36%),rgba(3,7,12,.86);backdrop-filter:blur(8px);}
+  .welcome.open{display:flex;}
+  .welcome-card{width:min(350px,calc(100vw - 28px));border:1px solid rgba(125,211,252,.22);border-radius:18px;background:linear-gradient(180deg,#111d2b,#09111a);box-shadow:0 24px 80px rgba(0,0,0,.48);padding:18px;text-align:center;animation:welcomeIn .42s ease both;}
+  .welcome-mark{width:56px;height:56px;margin:0 auto 12px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#22d3ee,#2563eb);box-shadow:0 16px 34px rgba(37,99,235,.35);color:#ffffff;animation:pulseMark 1.6s ease-in-out infinite;}
+  .welcome-mark svg{width:28px;height:28px;display:block;stroke:currentColor;stroke-width:2.7;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .welcome-title{font-size:18px;font-weight:950;margin-bottom:8px;}
+  .welcome-text{color:var(--muted);font-size:12px;line-height:1.45;margin-bottom:14px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes shimmer{to{transform:translateX(120%)}}
+  @keyframes load{0%{background-position:100% 0}100%{background-position:-100% 0}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @keyframes welcomeIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+  @keyframes pulseMark{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+  /* Interfaz más tranquila y legible, conservando las funciones existentes. */
+  body { background: var(--bg); }
+  body[data-theme="light"] { background: var(--bg); }
+  .top { padding: 16px; }
+  .body { padding: 14px 16px 18px; }
+  .card, body[data-theme="light"] .card { background: var(--panel); box-shadow: none; }
+  .card { border-radius: 12px; }
+  .step { border-radius: 8px; }
+  button { box-shadow: none; border-radius: 9px; }
+  button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+  .status { line-height: 1.45; }
+  .mark, .welcome-mark { box-shadow: none; background: #2456aa; animation: none; }
+  .primary, body[data-theme="light"] .primary { background: #2456aa; color: #fff; }
+  .pro { background: #14664e; color: #fff; }
+  .chip-btn, .step, .label, .footer, .safety-panel button, .mini-action, .badge { font-size: 11px; }
+  .bar::after { animation: none; }
+  button:hover:not(:disabled) { box-shadow: none; }
+  .stat { background: var(--panel); border-radius: 10px; }
+  body[data-theme="light"] .stat { background: var(--panel); }
+  .list { background: var(--panel); }
+  .safe-pill { font-size: 11px; }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+  <div class="welcome" id="welcomeBox" aria-hidden="true">
+    <div class="welcome-card">
+      <div class="welcome-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+      </div>
+      <div class="welcome-title" id="welcomeTitle">Bienvenido</div>
+      <div class="welcome-text" id="welcomeText">
+        Compatible con Chrome y Edge. Solo analiza la cuenta de Instagram iniciada en este navegador. Tus resultados se guardan localmente y no recopilamos datos personales; usamos datos minimos para detectar fallos, abuso o uso anormal de la extension.
+      </div>
+      <button class="primary" id="welcomeStart" type="button">Empezar</button>
+    </div>
+  </div>
+
+  <div class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+      </div>
+      <div class="title">
+        <h1>No me siguen</h1>
+        <div class="subtitle">Sin leer seguidores</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="chip-btn" id="langToggle" type="button">EN</button>
+      <button class="chip-btn" id="themeToggle" type="button">Claro</button>
+      <div class="safe-pill" id="versionPill">v2.8.4</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="steps">
+      <div class="step" id="stepDetect">Detectar</div>
+      <div class="step" id="stepConfirm">Confirmar</div>
+      <div class="step" id="stepAnalyze">Analizar</div>
+    </div>
+
+    <div class="card account" id="accountBox">
+      <div class="account-main">
+        <div class="avatar" id="accountAvatar">@</div>
+        <div class="user">
+          <div class="user-title" id="accountTitle">Cuenta</div>
+          <div class="user-sub" id="accountMeta">â€”</div>
+        </div>
+      </div>
+      <div class="confirm" id="confirmBox">
+        <div class="confirm-title">&iquest;Analizar esta cuenta?</div>
+        <div class="row">
+          <button class="ok" id="confirmBtn">Si</button>
+          <button class="secondary" id="rejectBtn">No</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row"><button class="primary" id="localAnalysisBtn" type="button">Analizar exportación local</button></div>
+    <div class="row">
+      <button class="primary" id="detectBtn">Detectar</button>
+      <button class="danger" id="stopBtn" disabled>Parar</button>
+    </div>
+
+    <div class="row">
+      <button class="secondary" id="exportBtn" disabled>Exportar TXT</button>
+      <button class="secondary" id="exportHtmlBtn" disabled>Exportar HTML</button>
+    </div>
+
+    <div class="row" id="unfollowActions">
+      <button class="secondary" id="manualModeBtn" disabled>Manual</button>
+      <button class="pro" id="unfollowBtn" disabled>Autom&aacute;tico</button>
+    </div>
+
+    <div class="row">
+      <button class="secondary" id="clearBtn" disabled>Limpiar</button>
+      <button class="secondary" id="reportBtn" type="button">Reportar</button>
+    </div>
+
+    <div class="bar-wrap" id="progressWrap"><div class="bar" id="progressBar"></div></div>
+    <div class="statusline"><span class="status-icon" id="statusIcon"></span><div class="status" id="status">Listo.</div></div>
+    <div class="safety-panel" id="safetyPanel">
+      <div class="safety-head"><span id="safetyTitle">Seguridad</span><button class="secondary" id="safetyPauseBtn" type="button">Pausa 48h</button></div>
+      <div id="safetyText">Modo seguro activo.</div>
+      <button class="secondary" id="safetyResetBtn" type="button" style="display:none;margin-top:8px">Revisé Instagram · Quitar pausa</button>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat"><div class="num" id="statFollowing">â€”</div><div class="label">Sigue</div></div>
+      <div class="stat"><div class="num" id="statFollowers">â€”</div><div class="label">Seguidores</div></div>
+      <div class="stat"><div class="num" id="statNotBack">â€”</div><div class="label">No siguen</div></div>
+    </div>
+
+    <div class="list" id="list"><div class="empty">Sin resultados.</div></div>
+
+    <div class="footer">
+      <a id="contactLink" href="mailto:soporte@example.invalid">Soporte</a>
+      <span class="version" id="versionLabel">v2.8.5</span>
+    </div>
+  </div>
+
+  <div class="modal" id="reportModal" aria-hidden="true">
+    <div class="modal-backdrop" id="reportBackdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+      <div class="modal-head">
+        <div class="modal-title" id="reportTitle">Reportar problema</div>
+        <button class="icon-btn" id="reportClose" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <label class="field" id="reportUsernameLabel">Username de Instagram
+        <input id="reportUsername" type="text" placeholder="@usuario" autocomplete="off" />
+      </label>
+      <label class="field" id="reportEmailLabel">Correo de contacto
+        <input id="reportUserEmail" type="email" placeholder="tu-correo@email.com" autocomplete="email" />
+      </label>
+      <label class="field" id="reportProblemLabel">Problema
+        <textarea id="reportProblem" placeholder="Describe que ocurrio"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button class="primary" id="reportSend" type="button">Enviar</button>
+        <button class="secondary" id="reportCancel" type="button">Cancelar</button>
+      </div>
+      <div class="modal-small" id="reportHint">Se abrir&aacute; Gmail con el reporte listo para enviar a soporte.</div>
+    </div>
+  </div>
+
+  <div class="modal" id="unfollowModal" aria-hidden="true">
+    <div class="modal-backdrop" id="unfollowBackdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="unfollowTitle">
+      <div class="modal-head">
+        <div class="modal-title" id="unfollowTitle">Confirmar unfollow</div>
+        <button class="icon-btn" id="unfollowClose" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <label class="field" id="unfollowLimitLabel">Cantidad a dejar de seguir
+        <input id="unfollowLimit" type="number" min="1" step="1" value="29" inputmode="numeric" />
+      </label>
+      <div class="risk-box" id="unfollowRiskText">
+        Modo seguro: recomendado 5 personas por dia, maximo conservador 12 por 24h. Si Instagram muestra aviso, limite o verificacion, automatico se bloquea 48h.
+      </div>
+      <label class="field" id="unfollowRiskLabel">
+        <input id="unfollowAcceptRisk" type="checkbox" />
+        Entiendo el riesgo y quiero continuar.
+      </label>
+      <div class="modal-actions">
+        <button class="danger" id="unfollowStart" type="button">Continuar</button>
+        <button class="secondary" id="unfollowCancel" type="button">Cancelar</button>
+      </div>
+      <div class="modal-small" id="unfollowHint">La extensi&oacute;n har&aacute; pausas entre acciones, pero el uso final queda bajo tu responsabilidad.</div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
